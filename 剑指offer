@@ -1,0 +1,131 @@
+//找出数组中重复的数字
+方法１：暴力解决，直接计算数字和次数
+方法２：把对应的数字放到对应的位置，出现在不是本身位置的数字就是重复数字
+public boolean duplicate(int[] nums, int length, int[] duplication) {
+    if (nums == null || length <= 0)
+        return false;
+    for (int i = 0; i < length; i++) {
+        while (nums[i] != i) {
+            if (nums[i] == nums[nums[i]]) {
+                duplication[0] = nums[i];
+                return true;
+            }
+            swap(nums, i, nums[i]);
+        }
+    }
+    return false;
+}
+
+private void swap(int[] nums, int i, int j) {
+    int t = nums[i];
+    nums[i] = nums[j];
+    nums[j] = t;
+}
+
+/******************************************************************************/
+//二维数组中的数字的查找，二维数组从左到右从上到下数字变大
+方法１：暴力循环
+方法２：从右上角开始进行判断查找
+public boolean Find(int target, int[][] matrix) {
+    if (matrix == null || matrix.length == 0 || matrix[0].length == 0)
+        return false;
+    int rows = matrix.length, cols = matrix[0].length;
+    int r = 0, c = cols - 1; // 从右上角开始
+    while (r <= rows - 1 && c >= 0) {
+        if (target == matrix[r][c])
+            return true;
+        else if (target > matrix[r][c])
+            r++;
+        else
+            c--;
+    }
+    return false;
+}
+
+/************************************************************************************/
+//从尾到头打印链表
+方法１：头插入法
+public ArrayList<Integer> printListFromTailToHead(ListNode listNode) {
+    // 头插法构建逆序链表
+    ListNode head = new ListNode(-1);
+    while (listNode != null) {
+        ListNode memo = listNode.next;
+        listNode.next = head.next;
+        head.next = listNode;
+        listNode = memo;
+    }
+    // 构建 ArrayList
+    ArrayList<Integer> ret = new ArrayList<>();
+    head = head.next;
+    while (head != null) {
+        ret.add(head.val);
+        head = head.next;
+    }
+    return ret;
+}
+方法２：使用栈
+public ArrayList<Integer> printListFromTailToHead(ListNode listNode) {
+    Stack<Integer> stack = new Stack<>();
+    while (listNode != null) {
+        stack.add(listNode.val);
+        listNode = listNode.next;
+    }
+    ArrayList<Integer> ret = new ArrayList<>();
+    while (!stack.isEmpty())
+        ret.add(stack.pop());
+    return ret;
+}
+方法３：使用java方法
+public ArrayList<Integer> printListFromTailToHead(ListNode listNode) {
+    ArrayList<Integer> ret = new ArrayList<>();
+    while (listNode != null) {
+        ret.add(listNode.val);
+        listNode = listNode.next;
+    }
+    Collections.reverse(ret);
+    return ret;
+}
+
+/************************************************************************************/
+//重建二叉树,根据二叉树的前序遍历和中序遍历的结果，重建该二叉树。假设输入的前序遍历和中序遍历都不含重复的数字
+// 缓存中序遍历数组每个值对应的索引
+private Map<Integer, Integer> indexForInOrders = new HashMap<>();
+
+public TreeNode reConstructBinaryTree(int[] pre, int[] in) {
+    for (int i = 0; i < in.length; i++)
+        indexForInOrders.put(in[i], i);
+    return reConstructBinaryTree(pre, 0, pre.length - 1, 0);
+}
+
+private TreeNode reConstructBinaryTree(int[] pre, int preL, int preR, int inL) {
+    if (preL > preR)
+        return null;
+    TreeNode root = new TreeNode(pre[preL]);
+    int inIndex = indexForInOrders.get(root.val);
+    int leftTreeSize = inIndex - inL;
+    root.left = reConstructBinaryTree(pre, preL + 1, preL + leftTreeSize, inL);
+    root.right = reConstructBinaryTree(pre, preL + leftTreeSize + 1, preR, inL + leftTreeSize + 1);
+    return root;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,64 @@
+首先来说说什么是二叉树，二叉树是树的特殊一种，具有以下特点：
+  １：每个节点最多有两个子树，节点的度最大为2
+  ２:左子树和右子树是有顺序的，次序不能颠倒
+  ３：即使某个节点只有一个子树，也要区分左右子树
+ 
+ 斜树：所有结点都只有左子树(左斜树)，或者只有右子树(右斜树)
+ 
+ 满二叉树：所有结点都存在左子树和右子树，并且所有叶子结点都在同一层上，这样就是满二叉树
+ 
+ 完全二叉树：对一棵具有n个结点的二叉树按层序拍好，如果编号为i的结点与同样深度的满二叉树编号为i结点在二叉树中完全想通就是完全二叉树
+ 
+ 二叉树的遍历：
+    二叉树遍历定义：从树的根节点出发，按照某种次序依次访问二叉树所有结点，使得每个结点被访问仅且一次。
+    关键字：访问和次序
+    
+ 二叉树的建立：
+ 
+ 
+ 
+ 二叉树的很多经典笔试题：
+ /********************************************************************************************************
+      输入某二叉树的前序遍历和中序遍历，重建该二叉树：
+ 数组a表示前序遍历，数组b表示中序遍历
+public class Solution {
+    public TreeNode reConstructBinaryTree(int [] pre,int [] in) {
+        TreeNode root=reConstructBinaryTree(pre,0,pre.length-1,in,0,in.length-1);
+        return root;
+    }
+    //前序遍历{1,2,4,7,3,5,6,8}和中序遍历序列{4,7,2,1,5,3,8,6}
+    private TreeNode reConstructBinaryTree(int [] pre,int startPre,int endPre,int [] in,int startIn,int endIn) {
+         
+        if(startPre>endPre||startIn>endIn)
+            return null;
+        TreeNode root=new TreeNode(pre[startPre]);
+         
+        for(int i=startIn;i<=endIn;i++)
+            if(in[i]==pre[startPre]){
+                root.left=reConstructBinaryTree(pre,startPre+1,startPre+i-startIn,in,startIn,i-1);
+                root.right=reConstructBinaryTree(pre,i-startIn+startPre+1,endPre,in,i+1,endIn);
+                      break;
+            }
+                 
+        return root;
+    }
+}
+
+/*************************************************************************************************************
+      输入两颗二叉树A和B，判断B是不是A的子结构
+void is(TreeNode node1, TreeNode node2) {
+    if(node1 == null) {
+      return false;
+    }
+    id(node2 == null) {
+      return true;
+    }
+    if(node1.value != node2.value) {
+      return false;
+    }
+    
+    return is(node1.leftNode,node2.left.leftNode) && is(node2.rightNode,node2.rightNode);
+}
+
+
+ 
